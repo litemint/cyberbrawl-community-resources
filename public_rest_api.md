@@ -1,237 +1,233 @@
-# Library
+# Cyberbrawl API Documentation
 
+Base URL: `https://connect.cyberbrawl.io`
+
+---
+
+## Library
 Get the list of all cards currently available in the game.
 
-**URL** : `https://api.litemint.com:9088/library/`
+**URL**: `https://connect.cyberbrawl.io/library`  
+**Method**: `GET`  
+**Auth required**: No
 
-**Method** : `GET`
+### Success Response
+**Code**: `200 OK`
 
-**Auth required** : No
-
-**Permissions required** : None
-
-## Success Response
-
-**Code** : `200 OK`
-
-**Content example**
-
+**Content example**:
 ```json
 {
-  "card_base_00001": {
-    "id": "card_base_00001",
+  "card_01_00001": {
+    "id": "card_01_00001",
     "type": 1,
     "name": "Overload I",
-    "icon": 0,
-    "points": [ 2, 0, 0, 0 ],
+    "stats": [2, 0, 0, 0],
     "boost": 0,
-    "dex": false,
-    "base": true
+    "desc": ""
   },
-  "card_base_00002": {
-    "id": "card_base_00002",
+  "card_02_00012": {
+    "id": "card_02_00012",
     "type": 2,
-    "name": "Hellfire I",
-    "icon": 1,
-    "points": [ 0, 2, 0, 0 ],
+    "name": "Card Name",
+    "stats": [0, 4, 0, 0],
     "boost": 0,
-    "dex": false,
-    "base": true
+    "desc": "Card description"
   }
 }
 ```
 
-## Notes
+---
 
-* The result is returned as an object (i.e. not an array).
-  
-  
-# Get Deck
+## Player
+Get player profile and stats
 
-Generate and shuffle a playable deck based on a given list of cards.
+**URL**: `https://connect.cyberbrawl.io/player?id={playerId}`  
+**Method**: `GET`  
+**Auth required**: No
 
-**URL** : `https://api.litemint.com:9088/getdeck/`
+### Success Response
+**Code**: `200 OK`
 
-**Method** : `POST`
-
-**Auth required** : No
-
-**Permissions required** : None
-
-**Data constraints**
-
+**Content example**:
 ```json
 {
-    "deck": "[Array of card ids]"
+  "id": "kyungjin",
+  "name": "Kyungjin",
+  "back": 8,
+  "stats": [125, 1323800, 64, 0, 29, 5428, 7869, 60],
+  "badges": {
+    "legend": true,
+    "elite": false,
+    "dev": true
+  }
 }
 ```
 
-**Data examples**
+---
 
-```json
-{
-    "deck": ["card_dex_00010", "card_dex_00052"]
-}
-```
+## Leaderboard
+Get leaderboard rankings.
 
-## Success Responses
+**URL**: `https://connect.cyberbrawl.io/server/leaderboard?name={name}`  
+**Method**: `GET`  
+**Auth required**: No
 
-**Condition** : Data provided is valid.
+### Success Response
+**Code**: `200 OK`
 
-**Code** : `200 OK`
-
-**Content example**
-
-```json
-[
-"card_dex_00002", 
-"card_base_00011",
-"card_base_00004",
-"card_base_00003",
-"card_base_00002"
-]
-```
-
-## Notes
-
-* The returned deck is generated according to the current shuffle algorithm in the game.
-
-
-# Stats
-
-Get the server stats
-
-**URL** : `https://api.litemint.com:9088/stats/`
-
-**Method** : `GET`
-
-**Auth required** : No
-
-**Permissions required** : None
-
-## Success Response
-
-**Code** : `200 OK`
-
-**Content example**
-
-```json
-{
-    "totalbattles":1112265,
-    "totalplayers":41132
-}
-```
-
-## Notes
-
-* The result is returned as an object.
-
-# Shop
-
-Get the list of all cards currently available in the shop including Stellar DEX issuer and code, unlock conditions and price (CREDIT) if applicable.
-
-**URL** : `https://api.litemint.com:9088/shop/`
-
-**Method** : `GET`
-
-**Auth required** : No
-
-**Permissions required** : None
-
-## Success Response
-
-**Code** : `200 OK`
-
-**Content example**
-
+**Content example**:
 ```json
 [
   {
-    "card": "card_dex_00009",
-    "wins": 1,
-    "coins": 155,
-    "properties": {
-      "id": "card_dex_00009",
-      "type": 4,
-      "name": "Biohazard",
-      "icon": 3,
-      "points": [ 0, 15, 0, 0 ],
-      "boost": 0,
-      "dex": true
-    },
-    "code": "CARD00009",
-    "issuer": "GBAKUWF2HTJ325PH6VATZQ3UNTK2AGTATR43U52WQCYJ25JNSCF5OFUN"
+    "id": "ihgux3",
+    "name": "Pipay",
+    "back": 10,
+    "stats": [125, 1246575, 59, 2, 56, 30685, 40002, 11520],
+    "score": 4194
+  }
+]
+```
+
+---
+
+## Server Stats
+Get overall game statistics.
+
+**URL**: `https://connect.cyberbrawl.io/server/stats`  
+**Method**: `GET`  
+**Auth required**: No
+
+### Success Response
+**Code**: `200 OK`
+
+**Content example**:
+```json
+{
+  "credit": {
+    "supply": 299792458,
+    "earned": 22070571.68711
   },
-  {
-    "card": "card_dex_00060",
-    "properties": {
-      "id": "card_dex_00060",
-      "type": 4,
-      "name": "Brawler",
-      "icon": 58,
-      "points": [ 0, 0, 0, 0 ],
-      "boost": 0,
-      "dex": true,
-      "legendary": true,
-      "unlimited": true,
-      "passive": true,
-      "desc": "Replace your first\nRepair with\nBrawl. Passive."
-    },
-    "code": "CARD00060",
-    "issuer": "GBAKUWF2HTJ325PH6VATZQ3UNTK2AGTATR43U52WQCYJ25JNSCF5OFUN"
+  "players": {
+    "total": 160567
+  },
+  "battles": {
+    "total": 6287446
   }
-]
-```
-
-## Notes
-
-* The result is returned as an array.
-
-# Leaderboard
-
-Get the current leaderboards (daily and seasonal) along with KDR stats for each player.
-
-**URL** : `https://api.litemint.com:9088/leaderboard/`
-
-**Method** : `GET`
-
-**Auth required** : No
-
-**Permissions required** : None
-
-## Success Response
-
-**Code** : `200 OK`
-
-**Content example**
-
-```json
-{
-  "ath": [
-    {
-      "id": "user1*litemint.com",
-      "battleid": "bdid1",
-      "name": "Player1",
-      "backid": 8,
-      "score": 125,
-      "kdr": 5.849074074074074,
-      "legend": 4089
-    }
-  ],
-  "top": [
-    {
-      "name": "Player2",
-      "battleid": "bdid2",
-      "backid": 13,
-      "score": "29",
-      "address": "GA7A...QQWH"
-    }
-  ],
-  "count": 49880,
-  "countall": "49880"
 }
 ```
 
-## Notes
+---
 
-* The result is returned as an object.
+## Battle Replays
+Get recent battle replay data.
+
+**URL**: `https://connect.cyberbrawl.io/battles/replay`  
+**Method**: `GET`  
+**Auth required**: No
+
+### Success Response
+**Code**: `200 OK`
+
+**Content example**:
+```json
+{
+  "result": [
+    {
+      "id": "p87ajw",
+      "turns": 10,
+      "players": [
+        {"name": "Jieun", "id": "jieun", "winner": true},
+        {"name": "Kyungjin", "id": "kyungjin", "winner": false}
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## Badges
+Get the list of available player badges.
+
+**URL**: `https://connect.cyberbrawl.io/badges`  
+**Method**: `GET`  
+**Auth required**: No
+
+### Success Response
+**Code**: `200 OK`
+
+**Content example**:
+```json
+[
+  {"id": 0, "name": "Trailblazer", "property": "trailblazer"},
+  {"id": 1, "name": "Champion", "property": "elite"},
+  {"id": 2, "name": "Legend", "property": "legend"}
+]
+```
+
+---
+
+## Heroes
+Get the list of available heroes.
+
+**URL**: `https://connect.cyberbrawl.io/heroes`  
+**Method**: `GET`  
+**Auth required**: No
+
+### Success Response
+**Code**: `200 OK`
+
+**Content example**:
+```json
+[
+  {"id": 0, "name": "Arya", "property": "arya"}
+]
+```
+
+---
+
+## Card Backs
+Get the list of available card backs.
+
+**URL**: `https://connect.cyberbrawl.io/cardbacks`  
+**Method**: `GET`  
+**Auth required**: No
+
+### Success Response
+**Code**: `200 OK`
+
+**Content example**:
+```json
+[
+  {"id": 0, "name": "Cyber Brawl", "desc": "Cyber Brawl Logo"},
+  {"id": 1, "name": "Red Dragon", "desc": "By Prasong Tadoungsorn"},
+  {"id": 5, "name": "Insignia", "desc": "Show off your rank!"}
+]
+```
+
+---
+
+## Community
+Get community content and featured videos.
+
+**URL**: `https://connect.cyberbrawl.io/server/community`  
+**Method**: `GET`  
+**Auth required**: No
+
+### Success Response
+**Code**: `200 OK`
+
+**Content example**:
+```json
+{
+  "links": [
+    {
+      "id": "link-eb34e83d-wow1-0",
+      "author": "Fred Kyung-jin Rezeau",
+      "desc": "CyberBrawl Dev",
+      "link": "https://www.youtube.com/watch?v=xLkj-wEfvsg",
+      "image": "https://img.youtube.com/vi/xLkj-wEfvsg/hqdefault.jpg"
+    }
+  ]
+}
+```
