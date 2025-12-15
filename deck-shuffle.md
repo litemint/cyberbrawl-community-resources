@@ -1,58 +1,67 @@
-# litemint.io Shuffle Algorithm
-Game URL：**[https://litemint.io](https://litemint.io)**
+# Cyberbrawl Shuffle Algorithm
+Play Game: [https://cyberbrawl.io](https://cyberbrawl.io)  
+Game Design: [https://kyungj.in/posts/blockchain-game-design-cyberbrawl-stellar/](https://kyungj.in/posts/blockchain-game-design-cyberbrawl-stellar/)  
 
 ## Rationale
 
-Ensure that regardless of the number of DEX card added, a player is unlikely to create a broken deck leading to deadlocks (i.e. stuck in an infinite game).
+**Game Balance:** Prevent deck configurations that could lead to infinite loops or game deadlocks, regardless of special card combinations.
 
-Provide players with enough freedom for depth and variety to embrace different playstyles with deck composition (Agro, Control...).
+**Strategic Depth:** Enable diverse playstyles (Aggro, Control, etc.) through flexible deck composition while maintaining competitive balance.
 
-Ensure that players do not need to worry about running out of cards and card counting.
-
-## Rest API
-
-The endpoint to generate random decks is documented here and can be used for simulators:
-https://github.com/litemint/litemint-io-community-resources/blob/master/public_rest_api.md#get-deck
+**Streamlined Gameplay:** Eliminate deck depletion concerns, allowing players to focus on strategy rather than card counting.
 
 ## Rotation
 
-Once a card is played it goes to the end of the deck so it is possible to predict the order in which they will be available again.
+**Core Mechanic**: Cards cycle to the bottom of your deck after being played, creating a predictable rotation pattern.
 
-**Forced draw** mechanic (Victory Rush, Trojan) inserts the forced card at the top of the player deck without modifying the other card order. These forced cards will be drawn again after a full rotation.
+**Forced Draw** (Victory Rush, Trojan): Inserts cards at the top of your deck without disrupting the existing order. These cards enter the normal rotation cycle after being drawn.
 
-**Multiple draw** mechanic (Fast Hands) pushes an additional card to the player's hand, bypassing the maximum of 3 cards. Players will not draw additional cards till their hands have 3 or more cards.
+**Overclocking:** Permanently increases your hand size to 4 cards for the remainder of the game.
 
-Edge Case: Boomerang will be drawn again after a full rotation but will not trigger the forced draw effect (occurs once).
+**Multi-Draw** (Fast Hands): Adds extra cards beyond your current hand limit (3 cards normally, 4 with Overclocking). Normal drawing resumes only when your hand drops to your hand limit or below.
+
+**Special Case**: Boomerang re-enters rotation after a full cycle but doesn't retrigger its forced draw effect—it only activates once per play.
 
 ## Favorite Cards Probabilities Sheet
+
+This spreadsheet calculates your odds of drawing specific cards based on your deck composition and favorite card selections.  
+**Strategic Insight:** Understanding these probabilities helps you balance reliability on specific draws.
 
 https://docs.google.com/spreadsheets/d/1ZhL15teEP4gGLqqUsluWM7OVdJNGaS-LFN61DVP7cn4/edit?usp=sharing
 
 ## Shuffle Pseudo code
 
 ```
-Initialize BaseDamageSet with card_base_00005, card_base_00008, card_base_00010, card_base_00011
-Initialize BaseHealSet with card_base_00003, card_base_00006, card_base_00009
-Initialize BaseEnergySet with card_base_00001, card_base_00004, card_base_00007
+// Initialize base card sets
+Initialize BaseDamageSet  = [card_01_00005, card_01_00008, card_01_00010, card_01_00011]
+Initialize BaseHealSet    = [card_01_00003, card_01_00006, card_01_00009]
+Initialize BaseEnergySet  = [card_01_00001, card_01_00004, card_01_00007]
 
+// Prepare player deck
 Remove all passive cards from PlayerDeck
-
 While PlayerDeck has less than 4 cards
-    Add one card_base_00002 (Hellfire I) to PlayerDeck
+    Add one card_01_00002 (Hellfire I) to PlayerDeck
 
+// Shuffle all sets
 Randomly shuffle BaseDamageSet
 Randomly shuffle BaseHealSet
 Randomly shuffle BaseEnergySet
-
 Randomly shuffle PlayerDeck
+
+// Trim to rotation limit
 Trim PlayerDeck to 10 cards (max rotation)
 
-If player has card_dex_00060 (Brawler)
-    Replace the first BaseHealSet card with card_dex_00061 (Brawl)
+// Apply special card replacements
+If player has card_02_00060 (Brawler)
+    Replace the first BaseHealSet card with card_02_00061 (Brawl)
 
-If player has card_dex_00031 (Primal Overload)
-    Replace card_base_00001 (Overload I) with card_dex_00031 (Primal Overload) in BaseEnergySet
+If player has card_02_00031 (Primal Overload)
+    Replace card_01_00001 (Overload I) with card_02_00031 (Primal Overload) in BaseEnergySet
 
+If player has card_02_00050 (Hellfire spec)
+    Replace BaseDamageSet with [card_02_00054, card_02_00054, card_02_00054, card_02_00054] (Primal Hellfire)
+
+// Build final deck in rotation groups
 Randomly shuffle (BaseDamageSet[0], BaseHealSet[0], BaseEnergySet[0], PlayerDeck[0], PlayerDeck[1])
 Add the result to FinalDeck
 
@@ -84,15 +93,17 @@ If PlayerDeck length > 8
 
 If PlayerDeck length > 9
     Randomly shuffle (BaseDamageSet[2], BaseHealSet[2], BaseEnergySet[2], PlayerDeck[9])
-    Add the result to FinalDeck    
+    Add the result to FinalDeck  
     
-Initialize FavoriteCardSet with all player favorited cards (starred)
+// Apply favorite card mechanic
+Initialize FavoriteCardSet with all player favorited cards (starred), excluding passive cards
 Randomly shuffle FavoriteCardSet
 
 For each FavoriteCard in FavoriteCardSet
-    If PlayerDeck has card_dex_00056 (Chosen One) or getRandom(0,1) <= 0.75
+    If PlayerDeck has card_02_00056 (Chosen One) or getRandom(0,1) <= 0.75
        Move FavoriteCard to a random position within the first 3 cards in FinalDeck
        break
 
+Filter FinalDeck to remove duplicates, allowing only card_02_00054 and all _01_ cards to remain
 return FinalDeck
 ```
