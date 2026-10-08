@@ -1,3 +1,5 @@
+> **This repository is archived.** It is no longer updated. Everything here, and much more, now lives at **[theorycraft.cyberbrawl.io](https://theorycraft.cyberbrawl.io/)**: the shuffle and rating algorithms, the game economy, the smart contracts, the public API, and the live card script. Contributions moved with it: every page there has an **Edit this page** link to [litemint/cyberbrawl-theorycraft](https://github.com/litemint/cyberbrawl-theorycraft).
+
 # Cyberbrawl Community Resources
 
 Welcome to the official community resources repository for [Cyberbrawl](https://cyberbrawl.io). Cyberbrawl is a fast, competitive card battler built for players who want instant action. Set in a futuristic cyber-arena, every card represents advanced combat tech — droids, firewalls, hacking tools, overload modules — all fighting for tempo control.
